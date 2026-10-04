@@ -4,13 +4,40 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Workout Log</title>
+
+<!-- PWA / Install -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#007aff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Workout Log">
+
+<!-- iOS / Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Workout">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+
+<!-- Standard icons -->
+<link rel="icon" type="image/png" sizes="32x32" href="icon-72.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+
+<!-- SEO / description -->
+<meta name="description" content="4-day Upper/Lower workout tracker with rest timer, volume tracking, and progression history. Installable offline PWA.">
+<meta name="format-detection" content="telephone=no">
+
 <style>
 :root{--bg:#fff;--bg2:#f2f2f7;--ink:#000;--mute:#8e8e93;--line:#e5e5ea;--blue:#007aff;--green:#34c759;--gtint:#dff7e6;--box:#e5e5ea;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000;--bg2:#1c1c1e;--ink:#fff;--mute:#8e8e93;--line:#2c2c2e;--blue:#0a84ff;--green:#30d158;--gtint:#12331c;--box:#2c2c2e}}
 :root[data-theme="dark"]{--bg:#000;--bg2:#1c1c1e;--ink:#fff;--mute:#8e8e93;--line:#2c2c2e;--blue:#0a84ff;--green:#30d158;--gtint:#12331c;--box:#2c2c2e}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;overscroll-behavior-y:contain;-webkit-user-select:none;user-select:none}
 a{color:inherit;text-decoration:none}button{font:inherit;color:inherit}
+input{-webkit-user-select:text;user-select:text}
 #app{max-width:560px;margin:auto;padding:0 16px 150px}
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);margin:0 -16px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line)}
 .top .c{text-align:center;min-width:0}.top b{display:block;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.top small{color:var(--mute);font-size:12px}
@@ -145,6 +172,13 @@ function addT(s){tl+=s;$('tt').textContent=mmss(tl)}
 function stopT(){clearInterval(ti);$('timer').classList.remove('show')}
 setInterval(()=>{const e=$('dur'),n=+location.hash.slice(6);if(e&&S.start[n])e.textContent=mmss(Math.floor((Date.now()-S.start[n])/1000))},1000);
 addEventListener('hashchange',()=>{render();scrollTo(0,0)});render();
+
+// PWA: register service worker
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js').catch(err=>console.log('SW registration failed:',err));
+  });
+}
 </script>
 </body>
 </html>
